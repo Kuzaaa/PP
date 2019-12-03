@@ -27,17 +27,13 @@ int main(int argc, char** argv) {
 	
 	double somme = 0;
 	
-	#pragma omp parallel reduction(+:somme)
-	{	double somme = 0;
-		for(i=0;i<n;i++){
-			
-			somme += T1D[i];
-		}
-		printf("Somme partielle : %f\n",somme);
+	#pragma omp parallel for reduction(+:somme)
+	for(i=0;i<n;i++){
+		
+		somme += T1D[i];
+		printf("Somme partielle du thread n° %d : %f\n",omp_get_thread_num(),somme);
 	}
-	
 	printf("Somme totale : %f\n",somme);
-	
 	
 	t_end=clock();
 	t_seq = (float)(t_end-t_start)/CLOCKS_PER_SEC;
