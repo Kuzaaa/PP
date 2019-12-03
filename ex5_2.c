@@ -47,3 +47,49 @@ int main(int argc, char** argv) {
 double rand_a_b(double a,double b){
 	return (rand()/(double)RAND_MAX)*(b-a)+a;
 }
+
+/* Avec 5 threads fixes, nous obtenons les performances suivantes :
+ * 
+ * n		Temps (en s)
+ * 
+ * 5		0,00078
+ * 10		0,000962
+ * 15		0,00126
+ * 20		0,002792
+ * 30		0,002058
+ * 50		0,003378
+ * 75		0,00454
+ * 100		0,005825
+ * 150		0,008123
+ * 200		0,011547
+ * 500		0,028389
+ * 1000		0,049329
+ * 2000		0,10568
+ * 5000		0,239569
+ * 10000	0,492261
+ * 20000	0,956898
+ * 50000	2,395036
+ * 
+ * Avec un tableau de 500 cases, et en faisant varier le nombre de 
+ * threads, nous obtenons :
+ * 
+ * Nombre de threads	Temps (en s)
+ * 
+ * 1					0,021168
+ * 2					0,026179
+ * 3					0,026954
+ * 5					0,027692
+ * 8					0,028835
+ * 10					0,026244
+ * 15					0,028408
+ * 20					0,029655
+ * 30					0,030399
+ * 50					0,032718
+ * 100					0,041426
+ * 200					0,053035
+ * 300					0,068332
+ * 500					0,085399
+ * 
+ * Le résultat ne semble pas très logique car le temps d'excéution 
+ * augmente avec le nombre de threads alors qu'il devrait diminuer.
+
