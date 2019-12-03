@@ -92,4 +92,13 @@ double rand_a_b(double a,double b){
  * 
  * Le résultat ne semble pas très logique car le temps d'excéution 
  * augmente avec le nombre de threads alors qu'il devrait diminuer.
-
+ * 
+ * ****** JEU DE TEST *******
+ * 
+ * gcc -fopenmp ex5_2.c -o ex5_2
+ * ./ex5_2 5 5
+ * ./ex5_2 500 1
+ *
+ * Avec le deuxième argument qui correspond à la taille du tableau, et le troisème au nombre de threads.
+ */
+ 
