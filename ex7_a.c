@@ -45,8 +45,8 @@ int main(int argc, char** argv) {
     for(i=0;i<n;i++){
         #pragma omp parallel for reduction(+:vectRes[i])
         for(j=0;j<n;j++){
-            vectTMP[j]=matA[i][j]*vectX[j];
-            vectRes[i]+=vectTMP[j];
+            vectTMP[j] = matA[i][j]*vectX[j];
+            vectRes[i] += vectTMP[j];
             printf("Somme partielle du thread n° %d : %f\n",omp_get_thread_num(), vectRes[i]);
         }
         printf("Somme totale : %f\n", vectRes[i]);
@@ -56,9 +56,27 @@ int main(int argc, char** argv) {
 	t_seq = (float)(t_end-t_start)/CLOCKS_PER_SEC;
 	printf("Temps séquentiel : %f \nCharge d'un thread : %f\nCharge d'un processeur : %f\n",t_seq,t_seq/m,t_seq/omp_get_num_procs());
 
+	printf("\nmatA = \n");
+	for(i=0;i<n;i++){
+		printf("[");
+		for(j=0;j<n;j++){
+			printf("%f,",matA[i][j]);
+		}
+		printf("]\n");
+	}
+
+	printf("\nvectX = [");
+	for(j=0;j<n;j++){
+		printf("%f,",vectX[j]);
+	}
+	printf("]\n\n");
+
+	printf("vectRes = [");
     for(i=0;i<n;i++){
+		printf("%f,",vectRes[i]);
         free(matA[i]);
     }
+	printf("]\n");
 	free(matA);
 
 	return 0;
