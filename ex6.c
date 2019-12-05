@@ -100,4 +100,13 @@ double rand_a_b(double a,double b){
  * 
  * Le temps d'exécution commence par augmenter avec le nombre de threads
  * puis diminue jusqu'à 50 threads et finit par augmenter.
-
+ * 
+ * 
+ * ****** JEU DE TEST *******
+ * 
+ * gcc -fopenmp ex6.c -o ex6
+ * ./ex6 5 5
+ * ./ex6 500 1
+ *
+ * Avec le deuxième argument qui correspond à la taille du tableau, et le troisème au nombre de threads.
+ */
