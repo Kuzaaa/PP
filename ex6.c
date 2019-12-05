@@ -65,3 +65,48 @@ int main(int argc, char** argv) {
 double rand_a_b(double a,double b){
 	return (rand()/(double)RAND_MAX)*(b-a)+a;
 }
+
+/* Avec 5 threads fixes nous obtenons les performances suivantes :
+ * 
+ * n		Temps d'exécution (en s)
+ * 5		0,001501
+ * 10		0,001615
+ * 20		0,003452
+ * 50		0,007045
+ * 100		0,012851
+ * 200		0,025562
+ * 500		0,091183
+ * 1000		0,212566
+ * 2000		0,274454
+ * 5000		0,66353
+ * 10000	1,034364
+ * 
+ * Nous pouvons voir que le temps d'exécution augmente 
+ * linéairement avec la taille du tableau.
+ * 
+ * Avec 500 cases du tableau fixe, et en modifiant le nombre de threads,
+ * nous obtenons les performances suivantes :
+ * 
+ * Nombre de threads	Temps d'exécution (en s)
+ * 1					0,067024
+ * 2					0,098522
+ * 5					0,081466
+ * 10					0,074595
+ * 20					0,074139
+ * 50					0,076087
+ * 100					0,087866
+ * 200					0,128361
+ * 500					0,132786
+ * 
+ * Le temps d'exécution commence par augmenter avec le nombre de threads
+ * puis diminue jusqu'à 50 threads et finit par augmenter.
+ * 
+ * 
+ * ****** JEU DE TEST *******
+ * 
+ * gcc -fopenmp ex6.c -o ex6
+ * ./ex6 5 5
+ * ./ex6 500 1
+ *
+ * Avec le deuxième argument qui correspond à la taille du tableau, et le troisème au nombre de threads.
+ */
