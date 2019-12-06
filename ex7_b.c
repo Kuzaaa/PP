@@ -6,7 +6,7 @@ double rand_a_b(double a,double b);
 
 int main(int argc, char** argv) {
 	int m = atoi(argv[2]);
-	int i,j;
+	int i,j,k;
 	clock_t t_start,t_end;
 	double t_seq;
 
@@ -16,11 +16,15 @@ int main(int argc, char** argv) {
 	double** matA = NULL;
     double** matB = NULL;
     double** matC = NULL;
+    double* vectTMP = NULL;
+    
+    double somme = 0;
  
 	int n = atoi(argv[1]);
 	matA = malloc(n*sizeof(double*));
     matB = malloc(n*sizeof(double*));
     matC = malloc(n*sizeof(double*));
+    vectTMP = malloc(n*sizeof(double));
 
     for(i=0;i<n;i++){
         matA[i] = malloc(n*sizeof(double));
@@ -31,30 +35,30 @@ int main(int argc, char** argv) {
 	#pragma omp parallel for private(j)
 	for(i=0;i<n;i++){
         for(j=0;j<n;j++){
-		      matA[i][j] = rand_a_b(0,100);
-		      matB[i][j] = rand_a_b(0,100);
+		      matA[i][j] = rand_a_b(0,10);
+		      matB[i][j] = rand_a_b(0,10);
 		      matC[i][j] = 0;
-		      printf("matA: %f\n",matA[i][j]);
-		      printf("matB: %f\n",matB[i][j]);
         }
 	}
 
     t_start=clock();
 
     for(i=0;i<n;i++){
-        #pragma omp parallel for reduction(+:vectRes[i])
-        for(j=0;j<n;j++){
-            vectTMP[j] = matA[i][j]*vectX[j];
-            vectRes[i] += vectTMP[j];
-            printf("Somme partielle du thread n° %d : %f\n",omp_get_thread_num(), vectRes[i]);
-        }
-        printf("Somme totale : %f\n", vectRes[i]);
+		for(j=0;j<n;j++){
+			somme = 0;
+			#pragma omp parallel for reduction(+:somme)
+			for(k=0;k<n;k++){
+				vectTMP[k] = matA[i][k]*matB[k][j];
+				somme += vectTMP[k];
+				//printf("Somme partielle du thread n° %d : %f\n",omp_get_thread_num(), somme);
+			}
+			//printf("Somme totale : %f\n", somme);
+			matC[i][j] = somme;
+		}
     }
 
 	t_end=clock();
-	t_seq = (float)(t_end-t_start)/CLOCKS_PER_SEC;
-	printf("Temps séquentiel : %f \nCharge d'un thread : %f\nCharge d'un processeur : %f\n",t_seq,t_seq/m,t_seq/omp_get_num_procs());
-
+	
 	printf("\nmatA = \n");
 	for(i=0;i<n;i++){
 		printf("[");
@@ -64,19 +68,37 @@ int main(int argc, char** argv) {
 		printf("]\n");
 	}
 
-	printf("\nvectX = [");
-	for(j=0;j<n;j++){
-		printf("%f,",vectX[j]);
+	printf("\nmatB = \n");
+	for(i=0;i<n;i++){
+		printf("[");
+		for(j=0;j<n;j++){
+			printf("%f,",matB[i][j]);
+		}
+		printf("]\n");
 	}
-	printf("]\n\n");
+	
+	printf("\nmatC = \n");
+	for(i=0;i<n;i++){
+		printf("[");
+		for(j=0;j<n;j++){
+			printf("%f,",matC[i][j]);
+		}
+		printf("]\n");
+	}
+	
+	t_seq = (float)(t_end-t_start)/CLOCKS_PER_SEC;
+	printf("Temps séquentiel : %f \nCharge d'un thread : %f\nCharge d'un processeur : %f\n",t_seq,t_seq/m,t_seq/omp_get_num_procs());
 
-	printf("vectRes = [");
-    for(i=0;i<n;i++){
-		printf("%f,",vectRes[i]);
-        free(matA[i]);
-    }
-	printf("]\n");
+	
+	for(i=0;i<n;i++){
+		free(matA[i]);
+		free(matB[i]);
+		free(matC[i]);
+	}
 	free(matA);
+	free(matB);
+	free(matC);
+	free(vectTMP);
 
 	return 0;
 }
@@ -85,21 +107,45 @@ double rand_a_b(double a,double b){
 	return (rand()/(double)RAND_MAX)*(b-a)+a;
 }
 
-/*******************/
-/*   JEU DE TEST   */
-/*******************/
+/* Avec 5 threads fixes nous obtenons les performances suivantes :
+ * 
+ * n	Temps d'exécution (en s)
+ * 1	0,000091
+ * 2	0,000342
+ * 5	0,00227
+ * 10	0,008965
+ * 20	0,037873
+ * 50	0,235857
+ * 100	0,956156
+ * 200	3,77397
+ * 500	21,436975
+ * 
+ * 
+ * Nous pouvons voir que le temps d'exécution augmente 
+ * linéairement avec la taille du tableau.
+ * 
+ * Avec n = 100, et en modifiant le nombre de threads,
+ * nous obtenons les performances suivantes :
+ * 
+ * Nombre de threads	Temps d'exécution (en s)
+ * 1					0,043819
+ * 2					0,270086
+ * 5					0,942986
+ * 10					1,948223
+ * 20					4,059723
+ * 50					10,262927
+ * 100					21,568026
 
-//gcc -fopenmp ex5_1.c -o ex5_1
-/* ./ex5_1 20 30 1
- * ./ex5_1 20 30 10
- *
- * Uniquement pour la version dynamique:
- * ./ex5_1 1000 1500 1
- * ./ex5_1 1000 1500 10
+ * 
+ * Le temps d'exécution augmente linéairement avec l'augmentation du
+ * nombre de threads, cela ne semble pas très logique.
+ * 
+ * 
+ * ****** JEU DE TEST *******
+ * 
+ * gcc -fopenmp ex7_b.c -o ex7_b
+ * ./ex7_b 5 5
+ * ./ex7_b 100 1
  *
  * Avec le deuxième argument qui correspond à la taille du tableau, et le troisème au nombre de threads.
- *
- * Pour passer du tableau dynamique au tableau statique, il faut commenter les parties du code entre les commentaires
- * //dynamique et //fin dynamique, et enlever les commentaires entre //statique et //fin statique
- * Et vice versa pour repasser au tableau dynamique par la suite.
  */
