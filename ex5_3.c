@@ -74,12 +74,12 @@ double rand_a_b(double a,double b){
 /*******************/
 
 //gcc -fopenmp ex5_1.c -o ex5_1
-/* ./ex5_1 20 30 1
- * ./ex5_1 20 30 10
+/* ./ex5_3 20 30 1
+ * ./ex5_3 20 30 10
  *
  * Uniquement pour la version dynamique:
- * ./ex5_1 1000 1500 1
- * ./ex5_1 1000 1500 10
+ * ./ex5_3 1000 1500 1
+ * ./ex5_3 1000 1500 10
  *
  * Avec le deuxième argument qui correspond à la taille du tableau, et le troisème au nombre de threads.
  *
