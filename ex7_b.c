@@ -17,9 +17,9 @@ int main(int argc, char** argv) {
     double** matB = NULL;
     double** matC = NULL;
     double* vectTMP = NULL;
-    
+
     double somme = 0;
- 
+
 	int n = atoi(argv[1]);
 	matA = malloc(n*sizeof(double*));
     matB = malloc(n*sizeof(double*));
@@ -31,7 +31,7 @@ int main(int argc, char** argv) {
         matB[i] = malloc(n*sizeof(double));
         matC[i] = malloc(n*sizeof(double));
     }
-	
+
 	#pragma omp parallel for private(j)
 	for(i=0;i<n;i++){
         for(j=0;j<n;j++){
@@ -43,6 +43,7 @@ int main(int argc, char** argv) {
 
     t_start=clock();
 
+	/*#pragma omp parallel for private(j,k)
     for(i=0;i<n;i++){
 		for(j=0;j<n;j++){
 			somme = 0;
@@ -55,10 +56,23 @@ int main(int argc, char** argv) {
 			//printf("Somme totale : %f\n", somme);
 			matC[i][j] = somme;
 		}
-    }
+    }*/
+
+   #pragma omp parallel shared(matA,matB,matC) private(i,j,k)
+   {
+   #pragma omp for schedule(static,m)
+   for (i=0; i<n; i=i+1){
+      for (j=0; j<n; j=j+1){
+         matC[i][j]=0.;
+         for (k=0; k<n; k=k+1){
+            matC[i][j]=(matC[i][j])+((matA[i][k])*(matB[k][j]));
+         }
+      }
+   }
+   }
 
 	t_end=clock();
-	
+
 	printf("\nmatA = \n");
 	for(i=0;i<n;i++){
 		printf("[");
@@ -76,7 +90,7 @@ int main(int argc, char** argv) {
 		}
 		printf("]\n");
 	}
-	
+
 	printf("\nmatC = \n");
 	for(i=0;i<n;i++){
 		printf("[");
@@ -85,11 +99,11 @@ int main(int argc, char** argv) {
 		}
 		printf("]\n");
 	}
-	
+
 	t_seq = (float)(t_end-t_start)/CLOCKS_PER_SEC;
 	printf("Temps séquentiel : %f \nCharge d'un thread : %f\nCharge d'un processeur : %f\n",t_seq,t_seq/m,t_seq/omp_get_num_procs());
 
-	
+
 	for(i=0;i<n;i++){
 		free(matA[i]);
 		free(matB[i]);
@@ -108,7 +122,7 @@ double rand_a_b(double a,double b){
 }
 
 /* Avec 5 threads fixes nous obtenons les performances suivantes :
- * 
+ *
  * n	Temps d'exécution (en s)
  * 1	0,000091
  * 2	0,000342
@@ -119,14 +133,14 @@ double rand_a_b(double a,double b){
  * 100	0,956156
  * 200	3,77397
  * 500	21,436975
- * 
- * 
- * Nous pouvons voir que le temps d'exécution augmente 
+ *
+ *
+ * Nous pouvons voir que le temps d'exécution augmente
  * linéairement avec la taille du tableau.
- * 
+ *
  * Avec n = 100, et en modifiant le nombre de threads,
  * nous obtenons les performances suivantes :
- * 
+ *
  * Nombre de threads	Temps d'exécution (en s)
  * 1					0,043819
  * 2					0,270086
@@ -136,13 +150,13 @@ double rand_a_b(double a,double b){
  * 50					10,262927
  * 100					21,568026
 
- * 
+ *
  * Le temps d'exécution augmente linéairement avec l'augmentation du
  * nombre de threads, cela ne semble pas très logique.
- * 
- * 
+ *
+ *
  * ****** JEU DE TEST *******
- * 
+ *
  * gcc -fopenmp ex7_b.c -o ex7_b
  * ./ex7_b 5 5
  * ./ex7_b 100 1
