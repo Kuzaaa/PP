@@ -43,33 +43,15 @@ int main(int argc, char** argv) {
 
     t_start=clock();
 
-	/*#pragma omp parallel for private(j,k)
-    for(i=0;i<n;i++){
-		for(j=0;j<n;j++){
-			somme = 0;
-			#pragma omp parallel for reduction(+:somme)
-			for(k=0;k<n;k++){
-				vectTMP[k] = matA[i][k]*matB[k][j];
-				somme += vectTMP[k];
-				//printf("Somme partielle du thread n° %d : %f\n",omp_get_thread_num(), somme);
-			}
-			//printf("Somme totale : %f\n", somme);
-			matC[i][j] = somme;
-		}
-    }*/
+   #pragma omp parallel for private(i,j,k) schedule(static,m)
+   for (i=0; i<n; i++){
+	  for (j=0; j<n; j++){
+		 for (k=0; k<n; k++){
+			matC[i][j] += (matA[i][k])*(matB[k][j]);
+		 }
+	  }
+   }
 
-   #pragma omp parallel shared(matA,matB,matC) private(i,j,k)
-   {
-   #pragma omp for schedule(static,m)
-   for (i=0; i<n; i=i+1){
-      for (j=0; j<n; j=j+1){
-         matC[i][j]=0.;
-         for (k=0; k<n; k=k+1){
-            matC[i][j]=(matC[i][j])+((matA[i][k])*(matB[k][j]));
-         }
-      }
-   }
-   }
 
 	t_end=clock();
 
@@ -124,35 +106,34 @@ double rand_a_b(double a,double b){
 /* Avec 5 threads fixes nous obtenons les performances suivantes :
  *
  * n	Temps d'exécution (en s)
- * 1	0,000091
- * 2	0,000342
- * 5	0,00227
- * 10	0,008965
- * 20	0,037873
- * 50	0,235857
- * 100	0,956156
- * 200	3,77397
- * 500	21,436975
- *
+ * 1	0,000083
+ * 2	0,000084
+ * 5	0,000136
+ * 10	0,000132
+ * 20	0,000522
+ * 50	0,004676
+ * 100	0,037335
+ * 200	0,284749
+ * 500	5,599433
  *
  * Nous pouvons voir que le temps d'exécution augmente
  * linéairement avec la taille du tableau.
  *
- * Avec n = 100, et en modifiant le nombre de threads,
+ * Avec n = 200, et en modifiant le nombre de threads,
  * nous obtenons les performances suivantes :
  *
  * Nombre de threads	Temps d'exécution (en s)
- * 1					0,043819
- * 2					0,270086
- * 5					0,942986
- * 10					1,948223
- * 20					4,059723
- * 50					10,262927
- * 100					21,568026
-
- *
- * Le temps d'exécution augmente linéairement avec l'augmentation du
- * nombre de threads, cela ne semble pas très logique.
+ * 1					0,285671
+ * 2					0,293883
+ * 5					0,296978
+ * 10					0,29019
+ * 20					0,284839
+ * 50					0,295942
+ * 100					0,320295
+ * 200					0,353718
+ * 
+ * Le temps d'exécution reste assez constant entre 1 et 50 threads.
+ * Il augmente légèrement à partir de 100 threads.
  *
  *
  * ****** JEU DE TEST *******
