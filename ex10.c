@@ -7,7 +7,7 @@ omp_lock_t lock;
 
 double calcul(double* array, int length){
 	double total = 0.0;
-	
+
 	#pragma omp parallel for
 	for(int i=0;i<length;i++){
 		omp_set_lock(&lock);
@@ -26,24 +26,41 @@ int main(){
 	double total;
 	clock_t t_start,t_end;
 	double t_seq;
-	
+
 	srand(time(NULL));
-	
+
 	#pragma omp parallel for
 	for(int i=0;i<1024;i++){
 		array[i]=rand_a_b(0,100);
 	}
-	
+
 	t_start = clock();
-	
+
 	omp_init_lock(&lock);
 	total = calcul(array,1024);
 	printf("total : %f \n",total);
 	omp_destroy_lock(&lock);
-	
+
 	t_end=clock();
 	t_seq = (float)(t_end-t_start)/CLOCKS_PER_SEC;
 	printf("Temps séquentiel : %f \nCharge d'un thread : %f\nCharge d'un processeur : %f\n",t_seq,t_seq/omp_get_num_threads(),t_seq/omp_get_num_procs());
-	
+
 	return 0;
 }
+/*
+ * Temps d'exécution (en s)
+ * 0,000147
+ *
+ *Pour n = 1024, avec le nb de thread le plus rapide.:
+ *	 le programme 5_2 s'exécute en 0.016114 secondes
+ *	 le programme 6 s'exécute en 0.014304 secondes
+ *   le programme 9 s'exécute en 0.006556 secondes
+
+ *Ce programme est donc beaucoup plus rapide que les précédents.
+ *
+ *
+ * ****** JEU DE TEST *******
+ *
+ * gcc -fopenmp ex10.c -o ex10
+ * ./ex10
+ */
