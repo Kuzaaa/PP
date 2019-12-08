@@ -101,3 +101,47 @@ int main(int argc, char** argv) {
 double rand_a_b(double a,double b){
 	return (rand()/(double)RAND_MAX)*(b-a)+a;
 }
+
+/* Avec 5 threads fixes nous obtenons les performances suivantes :
+ *
+ * n	Temps d'exécution (en s)
+ * 1	0,000320
+ * 2	0,000400
+ * 5	0,001802
+ * 10	0,001862
+ * 20	0,001980
+ * 50	0,000629
+ * 100	0,000811
+ * 200	0,001249
+ * 500	0,002243
+ *
+ * Nous pouvons voir que le temps d'exécution augmente
+ * avec la taille du tableau, malgré une chute du temps
+ * d'execution aux alentours des n = 50.
+ *
+ * Avec n = 500, et en modifiant le nombre de threads,
+ * nous obtenons les performances suivantes :
+ *
+ * Nombre de threads	Temps d'exécution (en s)
+ * 1					0,002535
+ * 2					0,001733
+ * 5					0,003247
+ * 10					0,002845
+ * 20					0,011190
+ * 50					0,015525
+ * 100					0,024035
+ * 200					0,022381
+ * 5000					0,043302
+ *
+ * Le temps d'exécution reste assez constant entre 1 et 10 threads.
+ * Il augmente à partir de 50 threads.
+ *
+ *
+ * ****** JEU DE TEST *******
+ *
+ * gcc -fopenmp ex8.c -o ex8
+ * ./ex8 5 5
+ * ./ex8 100 1
+ *
+ * Avec le deuxième argument qui correspond à la taille du tableau, et le troisème au nombre de threads.
+ */
