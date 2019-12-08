@@ -22,11 +22,24 @@ int main(int argc, char** argv){
 	printf("tableau \n");
 	#pragma omp parallel for
 	for(i=0;i<taille;i++){
-		//printf("Nombre de threads : %d \n",omp_get_num_threads());
+		printf("Nombre de threads : %d \n",omp_get_num_threads());
 		tab[i]=rand_a_b(0,100);
-		printf("%d \n",tab[i]);
 	}
+
+	printf("\ntab = [");
+	for(i=0;i<taille;i++){
+		printf("%d,",tab[i]);
+	}
+	printf("]\n\n");
+
 	carre(tab,taille);
+
+	printf("\ntab au carré = [");
+	for(i=0;i<taille;i++){
+		printf("%d,",tab[i]);
+	}
+	printf("]\n\n");
+
 	free(tab);
 
 	printf("Temps écoulé : %f secondes \n",(float)(clock()-t_start)/CLOCKS_PER_SEC);
@@ -43,9 +56,8 @@ void carre(int* tab,int taille){
 	printf("Carré \n");
 	#pragma omp parallel for
 	for(i=0;i<taille;i++){
-		//printf("Nombre de threads : %d \n",omp_get_num_threads());
+		printf("Méthode carre(): Nombre de threads : %d \n",omp_get_num_threads());
 		tab[i]=tab[i]*tab[i];
-		printf("%d \n",tab[i]);
 	}
 }
 
