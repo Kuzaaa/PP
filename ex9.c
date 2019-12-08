@@ -46,7 +46,16 @@ void carre(int* tab,int taille){
 	#pragma omp parallel for
 	for(i=0;i<taille;i++){
 		//printf("Nombre de threads : %d \n",omp_get_num_threads());
-		total+=tab[i];
+		
+		//critique
+		/*#pragma omp critical
+		{
+			total += tab[i];
+		}*/
+		
+		//atomique
+		#pragma omp atomic
+		total = total + tab[i];
 		
 		tab[i]=tab[i]*tab[i];
 		printf("Thread n° %d, carré : %d \n",omp_get_thread_num(),tab[i]);
@@ -56,4 +65,17 @@ void carre(int* tab,int taille){
 
 /*
  * a)
- * La variable total vaut bien la somme des termes du tableau, */
+ * La variable total ne vaut pas la somme des termes du tableau, car 
+ * c'est une variable partagée et donc tous les threads peuvent la 
+ * modifier en même temps, ce qui corrompt sa valeur.
+ * 
+ * b)
+ * Quand total est une variable privée, elle vaut sa valeur initiale en
+ * fin de boucle car chaque thread la modifie de son côté et elle est 
+ * détruite en même temps que le thread.
+ * 
+ * c)
+ * Quand on met une section critique, les performances sont équivalentes
+ * à un code non parallèle car un seul thread à la fois peut modifier
+ * la variable.
+ * */
