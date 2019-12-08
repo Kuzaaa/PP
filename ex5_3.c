@@ -73,7 +73,7 @@ double rand_a_b(double a,double b){
 /*   JEU DE TEST   */
 /*******************/
 
-//gcc -fopenmp ex5_1.c -o ex5_1
+//gcc -fopenmp ex5_3.c -o ex5_3
 /* ./ex5_3 20 30 1
  * ./ex5_3 20 30 10
  *
@@ -81,7 +81,8 @@ double rand_a_b(double a,double b){
  * ./ex5_3 1000 1500 1
  * ./ex5_3 1000 1500 10
  *
- * Avec le deuxième argument qui correspond à la taille du tableau, et le troisème au nombre de threads.
+ * Avec le deuxième argument qui correspond au nombre de ligne, le 
+ * troisième au nombre de colonnes, et le quatrième au nombre de threads.
  *
  * Pour passer du tableau dynamique au tableau statique, il faut commenter les parties du code entre les commentaires
  * //dynamique et //fin dynamique, et enlever les commentaires entre //statique et //fin statique

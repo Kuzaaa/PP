@@ -87,19 +87,21 @@ double rand_a_b(double a,double b){
 /*   JEU DE TEST   */
 /*******************/
 
-//gcc -fopenmp ex5_1.c -o ex5_1
+//gcc -fopenmp ex7_a.c -o ex7_a
 /* ./ex7_a 20 1
  * ./ex7_a 20 10
- * ./ec7_a 1000 1
+ * ./ex7_a 1000 1
  * ./ex7_a 1000 10
  *
- * Avec le deuxième argument qui correspond à la taille du tablea, et le troisème au nombre de threads.
+ * Avec le deuxième argument qui correspond à la taille du tableau, et 
+ * le troisème au nombre de threads.
  *
  */
 
  /* Avec 5 threads fixes nous obtenons les performances suivantes :
   *
   * n		Temps d'exécution (en s)
+  * 
   * 5		0,001091
   * 10		0,001468
   * 20		0,001827
@@ -112,13 +114,15 @@ double rand_a_b(double a,double b){
   * 5000	0,111531
   * 10000	0.449370
   *
-  * Nous pouvons voir que le temps d'exécution augmente en règle général, même s'il y a
-  * une baisse de temps lorsque le tableau atteint la centaines d'éléments jusqu'a 500.
+  * Nous pouvons voir que le temps d'exécution augmente en règle générale, 
+  * même s'il y a une baisse de temps lorsque le tableau atteint les 100 
+  * éléments jusqu'a 500.
   *
   * Avec 500 cases du tableau fixe, et en modifiant le nombre de threads,
   * nous obtenons les performances suivantes :
   *
   * Nombre de threads	Temps d'exécution (en s)
+  * 
   * 1					0,001263
   * 2					0,004083
   * 5					0,000567
@@ -129,6 +133,7 @@ double rand_a_b(double a,double b){
   * 200					0,017682
   * 500					0,027990
   *
-  * Nous pouvons voir que le temps d'exécution augmente en règle général, même s'il y a
-  * une baisse de temps lorsque le nombre de thread atteint la dizaine.
+  * Nous pouvons voir que le temps d'exécution augmente en règle générale, 
+  * même s'il y a une baisse de temps lorsque le nombre de threads 
+  * atteint 10.
   */

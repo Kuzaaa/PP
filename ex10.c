@@ -49,14 +49,13 @@ int main(){
 }
 /*
  * Temps d'exécution (en s)
- * 0,000147
+ * 0.000313
  *
- *Pour n = 1024, avec le nb de thread le plus rapide.:
- *	 le programme 5_2 s'exécute en 0.016114 secondes
- *	 le programme 6 s'exécute en 0.014304 secondes
- *   le programme 9 s'exécute en 0.006556 secondes
-
- *Ce programme est donc beaucoup plus rapide que les précédents.
+ * Pour n = 1024, avec 5 threads :
+ *	 le programme 5_2 s'exécute en 0.052721 secondes
+ *   le programme 9 s'exécute en 0.039668 secondes
+ * 
+ * Ce programme est donc beaucoup plus rapide que les précédents.
  *
  *
  * ****** JEU DE TEST *******

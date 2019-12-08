@@ -69,6 +69,7 @@ double rand_a_b(double a,double b){
 /* Avec 5 threads fixes nous obtenons les performances suivantes :
  * 
  * n		Temps d'exécution (en s)
+ * 
  * 5		0,001501
  * 10		0,001615
  * 20		0,003452
@@ -81,13 +82,14 @@ double rand_a_b(double a,double b){
  * 5000		0,66353
  * 10000	1,034364
  * 
- * Nous pouvons voir que le temps d'exécution augmente 
- * linéairement avec la taille du tableau.
+ * Nous pouvons voir que le temps d'exécution augmente linéairement avec 
+ * la taille du tableau.
  * 
  * Avec 500 cases du tableau fixe, et en modifiant le nombre de threads,
  * nous obtenons les performances suivantes :
  * 
  * Nombre de threads	Temps d'exécution (en s)
+ * 
  * 1					0,067024
  * 2					0,098522
  * 5					0,081466
@@ -108,5 +110,6 @@ double rand_a_b(double a,double b){
  * ./ex6 5 5
  * ./ex6 500 1
  *
- * Avec le deuxième argument qui correspond à la taille du tableau, et le troisème au nombre de threads.
+ * Avec le deuxième argument qui correspond à la taille du tableau, et 
+ * le troisème au nombre de threads.
  */

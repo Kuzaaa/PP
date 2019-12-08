@@ -92,4 +92,14 @@ void carre(int* tab,int taille){
  * Avec la clause de réduction, nous obtenons de meilleures performances
  * qu'avec l'opération atomique.
  * Pour 1000 cases et 100 threads : 0.025267 s
+ * 
+ * 
+ ******* JEU DE TEST *******
+ *
+ * gcc -fopenmp ex9.c -o ex9
+ * ./ex9 5 5
+ * ./ex9 100 1
+ * 
+ * Avec le deuxième argument qui correspond à la taille du tableau, et 
+ * le troisème au nombre de threads.
  * */

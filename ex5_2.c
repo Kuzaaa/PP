@@ -70,8 +70,8 @@ double rand_a_b(double a,double b){
  * 20000	0,956898
  * 50000	2,395036
  * 
- * Nous pouvons voir que le temps augmente linéairement 
- * avec la taille du tableau
+ * Nous pouvons voir que le temps augmente linéairement avec la taille 
+ * du tableau.
  * 
  * Avec un tableau de 500 cases, et en faisant varier le nombre de 
  * threads, nous obtenons :
