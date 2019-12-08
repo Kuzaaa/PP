@@ -43,7 +43,7 @@ void carre(int* tab,int taille){
 	int i;
 	int total = 0;
 	printf("Carré \n");
-	#pragma omp parallel for
+	#pragma omp parallel for reduction(+:total)
 	for(i=0;i<taille;i++){
 		//printf("Nombre de threads : %d \n",omp_get_num_threads());
 		
@@ -54,8 +54,11 @@ void carre(int* tab,int taille){
 		}*/
 		
 		//atomique
-		#pragma omp atomic
-		total = total + tab[i];
+		/*#pragma omp atomic
+		total = total + tab[i];*/
+		
+		//reduction
+		total+=tab[i];
 		
 		tab[i]=tab[i]*tab[i];
 		printf("Thread n° %d, carré : %d \n",omp_get_thread_num(),tab[i]);
@@ -78,4 +81,10 @@ void carre(int* tab,int taille){
  * Quand on met une section critique, les performances sont équivalentes
  * à un code non parallèle car un seul thread à la fois peut modifier
  * la variable.
+ * 
+ * d)
+ * Il n'y a pas de changement par rapport à la version précédente, les 
+ * temps de calcul sont pratiquement équivalents.
+ * 
+ * 
  * */
