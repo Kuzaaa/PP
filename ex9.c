@@ -81,10 +81,15 @@ void carre(int* tab,int taille){
  * Quand on met une section critique, les performances sont équivalentes
  * à un code non parallèle car un seul thread à la fois peut modifier
  * la variable.
+ * Pour 1000 cases et 100 threads : 0.026644 s
  * 
  * d)
  * Il n'y a pas de changement par rapport à la version précédente, les 
  * temps de calcul sont pratiquement équivalents.
+ * Pour 1000 cases et 100 threads : 0.026487 s
  * 
- * 
+ * e)
+ * Avec la clause de réduction, nous obtenons de meilleures performances
+ * qu'avec l'opération atomique.
+ * Pour 1000 cases et 100 threads : 0.025267 s
  * */
